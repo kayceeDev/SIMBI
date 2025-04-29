@@ -8,10 +8,16 @@ import { RegisterRequestBody, VerifyRequestBody, LoginRequestBody } from '../int
 
 export const register = async (req: Request<{}, {}, RegisterRequestBody>, res: Response): Promise<void> => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, levelOfEducation } = req.body;
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !levelOfEducation) {
       res.status(400).json({ error: 'Missing fields' });
+      return;
+    }
+
+    const validEducationLevels = ['secondary', 'university'];
+    if (!validEducationLevels.includes(levelOfEducation)) {
+      res.status(400).json({ error: 'Invalid level of education' });
       return;
     }
 
@@ -31,6 +37,7 @@ export const register = async (req: Request<{}, {}, RegisterRequestBody>, res: R
       email,
       password: hashedPassword,
       verificationToken,
+      levelOfEducation,
       walletAddress,
       privateKey: JSON.stringify(encryptedPrivateKey),
     });

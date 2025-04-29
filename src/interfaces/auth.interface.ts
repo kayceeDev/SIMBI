@@ -8,6 +8,10 @@ export interface IUser extends Document {
   isVerified: boolean;
   walletAddress: string;
   privateKey: string;
+  levelOfEducation: 'secondary' | 'university';
+  streak: number;
+  lastQuizDate: Date;
+  achievements: string[];
 }
 
 export interface EncryptedData {
@@ -19,6 +23,7 @@ export interface RegisterRequestBody {
   name: string;
   email: string;
   password: string;
+  levelOfEducation: 'secondary' | 'university';
 }
 
 export interface VerifyRequestBody {
@@ -29,4 +34,30 @@ export interface VerifyRequestBody {
 export interface LoginRequestBody {
   email: string;
   password: string;
+}
+
+export interface QuizQuestion {
+  question: string;
+  options: string[];
+  correctAnswer: string;
+}
+
+export interface IQuiz extends Document {
+  userId: string;
+  subject: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+  duration: 'short' | 'medium' | 'long';
+  questions: QuizQuestion[];
+  answers: string[];
+  status: 'in_progress' | 'completed';
+  createdAt: Date;
+}
+
+export interface IReward extends Document {
+  userId: string;
+  quizId: string;
+  tokensEarned: number;
+  streakBonus: number;
+  achievementsUnlocked: string[];
+  createdAt: Date;
 }
