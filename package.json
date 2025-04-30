@@ -2,12 +2,12 @@
   "name": "simbi",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon",
+    "dev": "nodemon --watch src --ext ts --exec ts-node ./src/app.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/app.js"
   },
   "repository": {
     "type": "git",
@@ -23,11 +23,14 @@
   "dependencies": {
     "axios": "^1.8.4",
     "bcrypt": "^5.1.1",
+    "body-parser": "^2.2.0",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "google-auth-library": "^9.15.1",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.16.0",
-    "mongoose": "^8.13.2"
+    "mongoose": "^8.13.2",
+    "openai": "^4.96.0"
   },
   "devDependencies": {
     "@types/axios": "^0.9.36",
