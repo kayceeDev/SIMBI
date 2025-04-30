@@ -6,6 +6,7 @@ import errorHandler from './middlewares/auth.middleware';
 import app from './app';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger';
+const cron = require('node-cron');
 
 dotenv.config();
 
@@ -18,7 +19,32 @@ app.use(express.json());
 connectDB();
 
 // Routes
+app.get('/', (req, res) => {
+  res.send('Express app running on Render!');
+});
+
+// Health check endpoint for pinging
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
+// Self-pinging function
+const startPinging = () => {
+  // Use the Render-provided URL or fallback to localhost for development
+  const appUrl = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
+  
+  // Schedule ping every 10 seconds
+  cron.schedule('*/10 * * * *', async () => {
+    try {
+      const response = await axios.get(`${appUrl}/health`);
+      console.log(`Ping successful at ${new Date().toISOString()}: ${response.status}`);
+    } catch (error:any) {
+      console.error(`Ping failed at ${new Date().toISOString()}: ${error.message}`);
+    }
+  });
+};
 app.use('/api/auth', authRoutes);
+
 
 // Swagger documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
