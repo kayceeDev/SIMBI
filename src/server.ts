@@ -31,7 +31,7 @@ app.get('/health', (req, res) => {
 // Self-pinging function
 const startPinging = () => {
   // Use the Render-provided URL or fallback to localhost for development
-  const appUrl = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
+  const appUrl = process.env.APP_URL || process.env.RENDER_EXTERNAL_URL|| `http://localhost:${PORT}`;
   
   // Schedule ping every 10 seconds
   cron.schedule('*/10 * * * *', async () => {
@@ -55,7 +55,7 @@ app.use(errorHandler);
 // Start server
 const server = app.listen(PORT, () => {
   console.log(`🚀 Server is running on port ${PORT}`);
-  console.log(`📚 API Documentation available at http://localhost:${PORT}/api-docs`);
+  console.log(`📚 API Documentation available at: ${PORT}/api-docs`);
 });
 
 // Graceful shutdown
