@@ -2,12 +2,22 @@
   "name": "simbi",
   "version": "1.0.0",
   "description": "",
+<<<<<<< HEAD
   "main": "app.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --watch src --ext ts --exec ts-node ./src/app.ts",
     "build": "tsc",
     "start": "node dist/app.js"
+=======
+  "main": "dist/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --exec ts-node src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "postinstall": "npm run build"
+>>>>>>> upstream/main
   },
   "repository": {
     "type": "git",
@@ -23,22 +33,43 @@
   "dependencies": {
     "axios": "^1.8.4",
     "bcrypt": "^5.1.1",
+<<<<<<< HEAD
     "body-parser": "^2.2.0",
+=======
+    "cors": "^2.8.5",
+>>>>>>> upstream/main
     "dotenv": "^16.5.0",
+    "ethers": "^6.13.7",
     "express": "^5.1.0",
     "google-auth-library": "^9.15.1",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.16.0",
     "mongoose": "^8.13.2",
+<<<<<<< HEAD
     "openai": "^4.96.0"
+=======
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.10.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+>>>>>>> upstream/main
   },
   "devDependencies": {
     "@types/axios": "^0.9.36",
     "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
     "@types/jsonwebtoken": "^9.0.9",
-    "@types/node": "^22.14.1",
+    "@types/node": "^22.15.2",
+    "@types/nodemailer": "^6.4.17",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {OAuth2Client} from 'google-auth-library';
 import dotenv from 'dotenv'; 
 import bodyParser from 'body-parser';
@@ -157,3 +158,17 @@ app.post('/api/generate', async (req: Request, res: Response, next: NextFunction
 app.listen(PORT, ()=> {
     console.log(`Server is running on http://localhost:${PORT}`)
 });
+=======
+import express, { Express } from 'express';
+import { connectDB } from './config/database';
+
+
+const app: Express = express();
+
+
+connectDB();
+
+
+
+export default app;
+>>>>>>> upstream/main
