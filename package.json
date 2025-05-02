@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/Gladchux14/SIMBI#readme",
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "axios": "^1.8.4",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
@@ -33,6 +34,7 @@
     "mongoose": "^8.13.2",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.10.1",
+    "openai": "^4.96.2",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   },
