@@ -1,5 +1,3 @@
-// src/services/studysession.service.ts
-
 import StudySession, { IStudySession } from "../models/studyplan";
 import { Types } from "mongoose";
 

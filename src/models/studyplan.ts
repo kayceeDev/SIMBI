@@ -1,5 +1,3 @@
-// src/models/studyplan.ts
-
 import { Schema, model, Document } from "mongoose";
 
 export interface IStudySession extends Document {

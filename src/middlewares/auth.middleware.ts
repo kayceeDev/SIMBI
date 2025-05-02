@@ -1,9 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-// Extend the Request type to include the authenticated user
 export interface AuthenticatedRequest extends Request {
-  user?: { userId: string; email?: string }; // Adapt as needed
+  user?: { userId: string; email?: string }; 
 }
 
 const authMiddleware = (
@@ -23,8 +22,7 @@ const authMiddleware = (
   try {
     const secret = process.env.JWT_SECRET || 'SIMBI_secret';
     const decoded = jwt.verify(token, secret) as { userId: string; email?: string };
-
-    // Attach user info to request
+    
     req.user = { userId: decoded.userId, email: decoded.email };
     next();
   } catch (err) {

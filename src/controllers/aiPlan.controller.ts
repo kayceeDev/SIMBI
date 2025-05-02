@@ -1,6 +1,5 @@
-// src/controllers/aiPlan.controller.ts
 import { Request, Response, NextFunction } from "express";
-import { generateAIStudyPlan } from "../services/aiPlan.service";  // Import the Gemini-based service
+import { generateAIStudyPlan } from "../services/aiPlan.service"; 
 
 export default class AIPlanController {
   // Static method to handle AI-powered study plan generation
@@ -8,7 +7,6 @@ export default class AIPlanController {
     try {
       const { educationLevel, learningStyle, subject, goals } = req.body;
 
-      // Validate required fields in the request body
       if (!educationLevel || !learningStyle || !subject || !goals) {
         res.status(400).json({ message: "Missing required fields (educationLevel, learningStyle, subject, goals)" });
         return;
@@ -29,7 +27,6 @@ export default class AIPlanController {
       });
     } catch (error) {
       console.error("AI plan generation error:", error);
-      // Send error response if there's an issue with AI plan generation
       res.status(500).json({ message: "Failed to generate AI study plan" });
     }
   }

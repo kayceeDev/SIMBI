@@ -1,11 +1,8 @@
-// src/services/aiPlan.service.ts
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import dotenv from "dotenv";
 
-// Load environment variables
 dotenv.config();
 
-// Initialize the Gemini API client with your API key
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
 
 // Function to generate an AI-powered study plan using Gemini

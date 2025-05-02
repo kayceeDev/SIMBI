@@ -1,7 +1,5 @@
-// src/controllers/studysession.controller.ts
-
 import { Request, Response, NextFunction } from "express";
-import { AuthenticatedRequest } from "../middlewares/auth.middleware";  // Import the custom type
+import { AuthenticatedRequest } from "../middlewares/auth.middleware";
 import StudySessionService from "../services/studyPlan.service";
 
 export default class StudySessionController {
@@ -17,7 +15,7 @@ export default class StudySessionController {
       res.status(201).json({ message: "Study session created", session });
     } catch (error) {
       console.error("Error creating study session:", error);
-      next(error);  // Pass error to the error handler
+      next(error); 
     }
   }
 
@@ -33,7 +31,7 @@ export default class StudySessionController {
       res.status(200).json({ sessions });
     } catch (error) {
       console.error("Error fetching study sessions:", error);
-      next(error);  // Pass error to the error handler
+      next(error);  
     }
   }
 
@@ -52,7 +50,7 @@ export default class StudySessionController {
       res.status(200).json({ session });
     } catch (error) {
       console.error("Error retrieving study session:", error);
-      next(error);  // Pass error to the error handler
+      next(error);  
     }
   }
 
@@ -71,7 +69,7 @@ export default class StudySessionController {
       res.status(200).json({ message: "Session updated", session: updated });
     } catch (error) {
       console.error("Error updating session:", error);
-      next(error);  // Pass error to the error handler
+      next(error);  
     }
   }
 
@@ -90,7 +88,7 @@ export default class StudySessionController {
       res.status(200).json({ message: "Session deleted" });
     } catch (error) {
       console.error("Error deleting session:", error);
-      next(error);  // Pass error to the error handler
+      next(error);  
     }
   }
 }
