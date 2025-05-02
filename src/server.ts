@@ -3,20 +3,17 @@ import dotenv from 'dotenv';
 import { connectDB } from './config/database';
 import authRoutes from './routes/auth.route';
 import errorHandler from './middlewares/auth.middleware';
-import app from './app';
+//import app from './app';
+import axios from 'axios';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger';
 const cron = require('node-cron');
 
-<<<<<<< HEAD
 
-const app = express();
+const app: Express = express();
 const PORT = process.env.PORT || 5000;
-=======
-dotenv.config();
->>>>>>> upstream/main
 
-const PORT = process.env.PORT || 3000;
+//const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());

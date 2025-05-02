@@ -1,9 +1,7 @@
-<<<<<<< HEAD
 import {OAuth2Client} from 'google-auth-library';
 import dotenv from 'dotenv'; 
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import express from 'express';
 import axios from 'axios';
 import {Request, Response, NextFunction} from 'express';
 import OpenAI from 'openai';
@@ -20,7 +18,7 @@ const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET);
 
 //Initialize Express App
-const app = express();
+const app : Express = express();
 const PORT = process.env.PORT || 3000;
 dotenv.config();
 app.use(bodyParser.json());
@@ -99,39 +97,39 @@ app.post('/api/generate', async (req: Request, res: Response): Promise<void> => 
 
 // DeepSeek Integration Service
 class DeepSeekService {
-    private readonly apiUrl: string;
-    private readonly apiKey: string;
-  
-    constructor() {
-      this.apiUrl = process.env.DEEPSEEK_API_URL!;
-      this.apiKey = process.env.DEEPSEEK_API_KEY!;
-    }
-  
-    async generateResponse(query: string): Promise<string> {
-      try {
-        const response = await axios.post(
-          this.apiUrl,
-          {
-            query,
-            mode: 'deepthink-r1',
-            max_tokens: 1000
-          },
-          {
-            headers: {
-              'Authorization': `Bearer ${this.apiKey}`,
-              'Content-Type': 'application/json'
-            }
+  private readonly apiUrl: string;
+  private readonly apiKey: string;
+
+  constructor() {
+    this.apiUrl = process.env.DEEPSEEK_API_URL!;
+    this.apiKey = process.env.DEEPSEEK_API_KEY!;
+  }
+
+  async generateResponse(query: string): Promise<string> {
+    try {
+      const response = await axios.post(
+        this.apiUrl,
+        {
+          query,
+          mode: 'deepthink-r1',
+          max_tokens: 1000
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${this.apiKey}`,
+            'Content-Type': 'application/json'
           }
-        );
-  
-        return response.data.choices[0].text;
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          throw new Error(`DeepSeek API Error: ${error.response?.data?.error || error.message}`);
         }
-        throw new Error('Unknown API error');
+      );
+
+      return response.data.choices[0].text;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(`DeepSeek API Error: ${error.response?.data?.error || error.message}`);
       }
+      throw new Error('Unknown API error');
     }
+  }
 }
   
 // API Endpoint for DeepSeek queries
@@ -158,12 +156,11 @@ app.post('/api/generate', async (req: Request, res: Response, next: NextFunction
 app.listen(PORT, ()=> {
     console.log(`Server is running on http://localhost:${PORT}`)
 });
-=======
 import express, { Express } from 'express';
 import { connectDB } from './config/database';
 
 
-const app: Express = express();
+//const app: Express = express();
 
 
 connectDB();
@@ -171,4 +168,3 @@ connectDB();
 
 
 export default app;
->>>>>>> upstream/main
