@@ -2,7 +2,9 @@ import express, { Express } from 'express';
 import dotenv from 'dotenv';
 import { connectDB } from './config/database';
 import authRoutes from './routes/auth.route';
-import errorHandler from './middlewares/auth.middleware';
+import errorHandler from './middlewares/error.middleware';
+import studyPlanRoutes from './routes/studyPlans.route';
+import aiPlanRoute from './routes/aiPlan.route';
 import app from './app';
 import axios from 'axios';
 import swaggerUi from 'swagger-ui-express';
@@ -48,6 +50,10 @@ const startPinging = () => {
   });
 };
 app.use('/api/auth', authRoutes);
+
+// The study Plan routes
+app.use('/api', studyPlanRoutes);
+app.use('/api/ai', aiPlanRoute);
 
 
 // Swagger documentation
