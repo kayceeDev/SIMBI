@@ -3,11 +3,12 @@ import dotenv from 'dotenv';
 import { connectDB } from './config/database';
 import authRoutes from './routes/auth.route';
 import errorHandler from './middlewares/auth.middleware';
-//import app from './app';
+import app from './app';
 import axios from 'axios';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger';
 const cron = require('node-cron');
+import quizRoutes from './routes/quiz.route';
 
 
 const app: Express = express();
