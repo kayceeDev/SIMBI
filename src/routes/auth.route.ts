@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { register, verify, login } from '../controllers/auth.controller';
+import { register, login } from '../controllers/auth.controller';
 
 const router = Router();
 
@@ -38,35 +38,6 @@ router.post('/register', register);
 
 /**
  * @swagger
- * /api/auth/verify:
- *   post:
- *     summary: Verify user email
- *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *               - verificationToken
- *             properties:
- *               email:
- *                 type: string
- *                 format: email
- *               verificationToken:
- *                 type: string
- *     responses:
- *       200:
- *         description: Email verified successfully
- *       400:
- *         description: Invalid token or email not found
- */
-router.post('/verify', verify);
-
-/**
- * @swagger
  * /api/auth/login:
  *   post:
  *     summary: Login user
@@ -98,7 +69,7 @@ router.post('/verify', verify);
  *                 token:
  *                   type: string
  *       400:
- *         description: Invalid credentials or email not verified
+ *         description: Invalid credentials
  */
 router.post('/login', login);
 
