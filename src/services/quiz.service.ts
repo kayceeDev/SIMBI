@@ -1,18 +1,19 @@
-import { generationConfig, model } from "../config/gemini";
-import { IQuizInput, QuizQuestion } from "../types/quiz.types";
+import { generationConfig, model } from "../config/geminiquiz";
+import { IQuizInput, QuizQuestion } from "../interfaces/quiz.types";
+import { QuizModel, IQuiz } from "../models/quiz.model";
 
 export async function generateQuiz(input: IQuizInput): Promise<QuizQuestion[]> {
   if (!input) {
     throw new Error("Input is required");
   }
 
-  const { topic, academicLevel, questionType, numberOfQuestions, duration } = input;
+  const { topic, academicLevel, numberOfQuestions, duration, difficulty } = input;
   const durationLine = duration ? `The quiz should last for ${duration} minutes.` : "";
 
   const userPrompt = `
     Generate a quiz on the topic "${topic}" for ${academicLevel} students.
-    The quiz should contain ${numberOfQuestions} questions of type ${questionType}.
-    ${durationLine}
+    The quiz should contain ${numberOfQuestions} questions of type MCQ.
+    ${durationLine}. It should be of ${difficulty} difficulty.
     Provide each question with options (if applicable), and clearly mark the correct answer.
     Format the output as a JSON array of questions with fields: question, options, correct_answer where applicable and without
     any introductory text, explanations or markdown.
@@ -56,4 +57,48 @@ export async function generateQuiz(input: IQuizInput): Promise<QuizQuestion[]> {
       throw new Error("An unknown error occurred during quiz generation.");
     }
   }
+}
+
+// Create and save a new quiz
+export async function createQuiz(userId: string, input: IQuizInput): Promise<IQuiz> {
+  const questions = await generateQuiz(input);
+
+  const newQuiz = new QuizModel({
+    userId,
+    topic: input.topic,
+    academicLevel: input.academicLevel,
+    difficulty: input.difficulty,
+    numberOfQuestions: input.numberOfQuestions,
+    duration: input.duration,
+    questions,
+    answers: Array(input.numberOfQuestions).fill(null),
+    progress: 0
+  });
+
+  return await newQuiz.save();
+}
+
+// Submit an answer and update progress
+export async function submitAnswer(userId: string, quizId: string, questionIndex: number, answer: string): Promise<IQuiz> {
+  const quiz = await QuizModel.findById(quizId || { userId });
+  if (!quiz) throw new Error('Quiz not found');
+
+  quiz.answers[questionIndex] = answer;
+
+  const answeredCount = quiz.answers.filter(ans => ans !== null).length;
+  quiz.progress = answeredCount / quiz.numberOfQuestions;
+
+  return await quiz.save();
+}
+
+// Get quiz by ID
+export async function getQuizById(quizId: string): Promise<IQuiz | null> {
+  return await QuizModel.findById(quizId);
+}
+
+// Get user progress
+export async function getQuizProgress(quizId: string, userId: string): Promise<number> {
+  const quiz = await QuizModel.findById(quizId || { userId });
+  if (!quiz) throw new Error('Quiz not found');
+  return quiz.progress;
 }

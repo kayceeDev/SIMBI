@@ -1,28 +1,57 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const quizGenerator_middleware_1 = require("../middlewares/quizGenerator.middleware");
-const router = express_1.default.Router();
-router.post('/generate-quiz', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+/*import express from 'express';
+import { Request, Response } from 'express';
+import { generateQuiz, IQuizInput } from '../middlewares/quizGenerator.middleware';
+
+const router = express.Router();
+
+router.post('/generate-quiz', async (req: Request, res: Response) : Promise<void> => {
     try {
-        const input = req.body;
-        const quiz = yield (0, quizGenerator_middleware_1.generateQuiz)(input);
-        res.json(quiz);
+    const input: IQuizInput = req.body;
+    const quiz = await generateQuiz(input);
+    res.json(quiz);
+    } catch (error) {
+        res.status(500).json({error: 'Failed to generate quiz'})
     }
-    catch (error) {
-        res.status(500).json({ error: 'Failed to generate quiz' });
+});
+// Quiz generator api
+app.post('/api/quiz', async (req: Request, res: Response):Promise<any> => {
+    const { topic, academicLevel, questionType, numberOfQuestions, duration } = req.body;
+  
+    // Basic validation
+    if (!topic || !academicLevel || !numberOfQuestions || !questionType) {
+        res.status(400).json({ error: 'Missing required parameters: topic, academicLevel, numQuestions, questionType' });
     }
-}));
-exports.default = router;
+    if (typeof numberOfQuestions !== 'number' || numberOfQuestions <= 0) {
+        res.status(400).json({ error: 'numQuestions must be a positive number' });
+    }
+     if (questionType !== 'MCQ' && questionType !== 'Short Answer') {
+        res.status(400).json({ error: 'questionType must be either "MCQ" or "Short Answer"' });
+     }
+  
+    const params: IQuizInput = {
+        topic,
+        academicLevel,
+        numberOfQuestions,
+        questionType,
+        duration // Pass optional duration if provided
+    };
+  
+    try {
+        // --- Call the Generation Function ---
+        const quizJson: QuizQuestion[] = await generateQuiz(params);
+  
+        // --- Send Successful Response ---
+        res.status(200).json(quizJson);
+  
+    } catch (error) {
+        // --- Handle Errors from Generation ---
+        console.error(`API Route Error generating quiz for topic "${topic}":`, error);
+  
+        // Send an appropriate server error response
+        const message = (error instanceof Error) ? error.message : 'An internal server error occurred while generating the quiz.';
+        res.status(500).json({ error: 'Quiz generation failed', details: message });
+    }
+  });
+
+export default router;*/ 

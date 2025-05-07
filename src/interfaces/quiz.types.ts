@@ -1,7 +1,7 @@
 export interface IQuizInput {
     topic: string;
+    difficulty: 'easy' | 'medium' | 'hard';
     academicLevel: 'secondary school' | 'university' | 'personal development';
-    questionType: 'MCQ' | 'True/False' | 'Short Answer';
     numberOfQuestions: number;
     duration?: number; // in minutes
   }
