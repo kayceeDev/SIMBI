@@ -3,8 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/user';
 import { generateWallet, encryptPrivateKey } from '../services/walletService';
-import { sendVerificationEmail } from '../services/emailService';
-import { RegisterRequestBody, VerifyRequestBody, LoginRequestBody } from '../interfaces/auth.interface';
+import { RegisterRequestBody, LoginRequestBody } from '../interfaces/auth.interface';
 
 export const register = async (req: Request<{}, {}, RegisterRequestBody>, res: Response): Promise<void> => {
   try {
@@ -28,7 +27,6 @@ export const register = async (req: Request<{}, {}, RegisterRequestBody>, res: R
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
     const { address: walletAddress, privateKey } = generateWallet();
     const encryptedPrivateKey = encryptPrivateKey(privateKey);
 
@@ -36,49 +34,21 @@ export const register = async (req: Request<{}, {}, RegisterRequestBody>, res: R
       name,
       email,
       password: hashedPassword,
-      verificationToken,
+      isVerified: true,
       levelOfEducation,
       walletAddress,
       privateKey: JSON.stringify(encryptedPrivateKey),
     });
 
     await user.save();
-    await sendVerificationEmail(email, verificationToken);
 
-    res.json({ message: 'Registration successful. Please check your email to verify.' });
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET || 'your_secret_key', { expiresIn: '1h' });
+    res.json({ message: 'Registration successful', token });
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(`Registration error: ${error.message}`);
     }
     throw new Error('Registration error: An unknown error occurred');
-  }
-};
-
-export const verify = async (req: Request<{}, {}, VerifyRequestBody>, res: Response): Promise<void> => {
-  try {
-    const { email, verificationToken } = req.body;
-
-    const user = await User.findOne({ email });
-    if (!user) {
-      res.status(400).json({ error: 'User not found' });
-      return;
-    }
-
-    if (user.verificationToken !== verificationToken) {
-      res.status(400).json({ error: 'Invalid token' });
-      return;
-    }
-
-    user.isVerified = true;
-    user.verificationToken = undefined;
-    await user.save();
-
-    res.json({ message: 'Email verified successfully' });
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`Verification error: ${error.message}`);
-    }
-    throw new Error('Verification error: An unknown error occurred');
   }
 };
 
@@ -89,11 +59,6 @@ export const login = async (req: Request<{}, {}, LoginRequestBody>, res: Respons
     const user = await User.findOne({ email });
     if (!user) {
       res.status(400).json({ error: 'User not found' });
-      return;
-    }
-
-    if (!user.isVerified) {
-      res.status(400).json({ error: 'Email not verified' });
       return;
     }
 
