@@ -1,22 +1,56 @@
 import { Request, Response } from "express";
+import mongoose from "mongoose";
 import { IQuizInput } from "../interfaces/quiz.types";
 import * as quizService from "../services/quiz.service";
+import multer from 'multer';
+import { IQuiz } from "../models/quiz.model";
 
-export const generateQuizHandler = async (req: Request, res: Response) => {
-  try {
-    const input: IQuizInput = req.body;
-    const quiz = await quizService.generateQuiz(input);
-    res.status(200).json({ success: true, data: quiz });
-  } catch (error: any) {
-    console.error("Controller error:", error.message);
-    res.status(500).json({ success: false, message: error.message });
+const upload = multer({ dest: 'uploads/' });
+
+export const generateQuizHandler = [
+  upload.single('file'),
+  async (req: Request, res: Response) => {
+    try {
+      const input: IQuizInput = req.body;
+      
+      // Validate userId
+      if (!req.body.userId) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "userId is required" 
+        });
+      }
+
+      if (req.file) {
+        input.file = req.file;
+      }
+      const quiz = await quizService.createQuiz(req.body.userId, input) as IQuiz;
+      console.log('Quiz created with ID:', quiz._id);
+      res.status(200).json({ 
+        success: true, 
+        quizId: quiz._id.toString(),
+        data: quiz // Send the full quiz object instead of just questions
+      });
+    } catch (error: any) {
+      console.error("Controller error:", error.message);
+      res.status(500).json({ success: false, message: error.message });
+    }
   }
-};
+];
 
 export const submitAnswerHandler = async (req: Request, res: Response) => {
   try {
     const { userId, quizId } = req.params;
     const { questionIndex, answer } = req.body;
+
+    // Debug the quizId
+    console.log("Received quizId:", quizId);
+
+    // Validate quizId
+    if (!mongoose.Types.ObjectId.isValid(quizId)) {
+      return res.status(400).json({ error: "Invalid quizId format" });
+    }
+
     const quiz = await quizService.submitAnswer(userId, quizId, questionIndex, answer);
     res.status(200).json({ progress: quiz.progress });
   } catch (err: any) {
@@ -25,13 +59,33 @@ export const submitAnswerHandler = async (req: Request, res: Response) => {
 };
 
 export const getQuizHandler = async (req: Request, res: Response) => {
-  const quiz = await quizService.getQuizById(req.params.quizId);
+  const { quizId } = req.params;
+
+  // Debug the quizId
+  console.log("Received quizId for getQuiz:", quizId);
+
+  // Validate quizId
+  if (!mongoose.Types.ObjectId.isValid(quizId)) {
+    return res.status(400).json({ error: "Invalid quizId format" });
+  }
+
+  const quiz = await quizService.getQuizById(quizId);
   quiz ? res.json(quiz) : res.status(404).json({ error: 'Quiz not found' });
 };
 
 export const getProgressHandler = async (req: Request, res: Response) => {
   try {
-    const progress = await quizService.getQuizProgress(req.params.quizId, req.params.userId);
+    const { quizId, userId } = req.params;
+
+    // Debug the quizId
+    console.log("Received quizId for getProgress:", quizId);
+
+    // Validate quizId
+    if (!mongoose.Types.ObjectId.isValid(quizId)) {
+      return res.status(400).json({ error: "Invalid quizId format" });
+    }
+
+    const progress = await quizService.getQuizProgress(quizId, userId);
     res.json({ progress });
   } catch (err: any) {
     res.status(404).json({ error: err.message });
