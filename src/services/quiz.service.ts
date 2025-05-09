@@ -144,9 +144,7 @@ export async function createQuiz(userId: string, input: IQuizInput): Promise<IQu
     progress: 0
   });
 
-  const savedQuiz = await newQuiz.save();
-  console.log('Created quiz with ID:', savedQuiz._id);
-  return savedQuiz;
+  return await newQuiz.save();
 }
 
 export async function submitAnswer(userId: string, quizId: string, questionIndex: number, answer: string): Promise<IQuiz> {
