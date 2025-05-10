@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 import { IQuizInput } from "../interfaces/quiz.types";
 import * as quizService from "../services/quiz.service";
 import multer from 'multer';
-import { IQuiz } from "../models/quiz.model";
 
 const upload = multer({ dest: 'uploads/' });
 
@@ -12,25 +11,11 @@ export const generateQuizHandler = [
   async (req: Request, res: Response) => {
     try {
       const input: IQuizInput = req.body;
-      
-      // Validate userId
-      if (!req.body.userId) {
-        return res.status(400).json({ 
-          success: false, 
-          message: "userId is required" 
-        });
-      }
-
       if (req.file) {
         input.file = req.file;
       }
-      const quiz = await quizService.createQuiz(req.body.userId, input) as IQuiz;
-      console.log('Quiz created with ID:', quiz._id);
-      res.status(200).json({ 
-        success: true, 
-        quizId: quiz._id.toString(),
-        data: quiz // Send the full quiz object instead of just questions
-      });
+      const quiz = await quizService.createQuiz(req.body.userId, input);
+      res.status(200).json({ success: true, data: quiz }); // Return full quiz object
     } catch (error: any) {
       console.error("Controller error:", error.message);
       res.status(500).json({ success: false, message: error.message });
